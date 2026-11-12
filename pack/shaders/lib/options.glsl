@@ -18,8 +18,8 @@
 #define EXPOSURE 1.00            // [0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.40 1.50]
 #define CONTRAST 0.30            // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.80 1.00]  1.00 = full S-curve
 #define BLACK_LIFT 0.010         // [0.000 0.010 0.015 0.025 0.040 0.060]
-#define SATURATION 0.90         // [0.00 0.25 0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.50 1.75 2.00]
-#define VIBRANCE 0.20           // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00]
+#define SATURATION 1.00        // [0.00 0.25 0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.50 1.75 2.00]
+#define VIBRANCE 0.00          // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00]
 #define CHROMA_LIMIT 1.00        // [0.00 0.25 0.50 0.70 0.80 0.90 1.00]
 // Tone colours: a preset sets the shadow / midtone / highlight colours (lib/grade.glsl);
 // the strength says how strongly all three ranges are tinted.
