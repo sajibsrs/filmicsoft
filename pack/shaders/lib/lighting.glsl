@@ -65,13 +65,16 @@ vec2 shadowTerm(vec3 feet, vec3 nWS) {
     if (!hasSkylight) return vec2(1.0, 0.0);
     float h = sin(sunAngle * 6.28318530718);
     float dist = length(feet);
-    // Day: in from 3 to 14 degrees of sun. Night: the moon's map is only used
-    // from 14 to 24 degrees of moon. Iris swaps the shadow light to the moon at
-    // sunAngle 0.5 and back at 1.0 (vanilla's eased day curve puts those at
-    // ticks ~12785 and ~23215), when the setting light is on the horizon and
-    // the rising one is too: both ramps are zero there, so the map changes
-    // direction while it has no weight and no shadow pops.
-    float lightUp = smoothstep(0.05, 0.25, h) + smoothstep(0.25, 0.40, -h);
+    // Day: in from 1 to 6 degrees of sun, so golden hour keeps its shadows
+    // (the SHADOW_MIN_ELEVATION floor in shadowyaw.glsl keeps them from
+    // smearing; the ramp used to stop at 14 degrees and left sunset flat).
+    // Night: the moon's map is only used from 14 to 24 degrees of moon. Iris
+    // swaps the shadow light to the moon at sunAngle 0.5 and back at 1.0
+    // (vanilla's eased day curve puts those at ticks ~12785 and ~23215), when
+    // the setting light is on the horizon and the rising one is too: both
+    // ramps are zero there, so the map changes direction while it has no
+    // weight and no shadow pops.
+    float lightUp = smoothstep(0.02, 0.10, h) + smoothstep(0.25, 0.40, -h);
     float w = (1.0 - smoothstep(0.85 * SHADOW_DISTANCE, 0.98 * SHADOW_DISTANCE, dist)) * lightUp;
     if (w <= 0.0) return vec2(1.0, 0.0);
     // Work in the frame the map was rendered in (see shadowyaw.glsl). Built once:
@@ -235,7 +238,15 @@ vec3 shadeSurface(vec3 albedoGamma, vec2 lm, vec3 nWS, float ao, float foliage, 
         float open = sunOpen(sky, sh);
         vec3 moonCol = vec3(0.42, 0.55, 1.00) * 0.10 * MOON_BRIGHTNESS;
         vec3 directCol = (moonCol * diffM * (1.0 - dayAmt) + sunCol * diffS * dayAmt) * (1.0 - 0.9 * rain);
-        direct = directCol * open * mix(1.0, aoT, 0.5) * dayScale;
+        // Vertex AO on direct light: it stood in for contact shadows before the
+        // shadow map. Where the map is trusted it only doubles up and reads as
+        // grime in sunlit corners, so most of it comes off there; the sky-light
+        // fallback (far, low light, shadows off) keeps the old half strength.
+        float directAo = 0.5;
+#ifdef ENABLE_SHADOWS
+        directAo = mix(0.5, 0.2, sh.y);
+#endif
+        direct = directCol * open * mix(1.0, aoT, directAo) * dayScale;
     }
 
     // ---- Ambient: cool sky above, warm bounce below -----------------------
