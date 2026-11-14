@@ -80,7 +80,19 @@ play.
   G-buffer, no deferred pass) and bloom runs at low resolution, keeping
   memory use and bandwidth low; that also matters on laptops and integrated GPUs.
 
-## What's new in 2.5.0
+## What's new in 2.6.0
+
+- **Moon shadows:** a high moon now casts real shadows at night.
+- **Held torch light:** a torch or any light block in your hand lights nearby
+  surfaces (Held Torch Light, on by default).
+- Water, glass and other translucents receive shadows.
+- Shadows stay through golden hour, and light bounced off the ground takes
+  the sun's colour.
+- Grass and plant shadows now reach farther when Shadow Distance is raised.
+- New grade defaults: Saturation 1.00, Vibrance 0.00, Contrast 0.20, Black
+  Lift 0.025, Ambient 1.25.
+
+### 2.5.0
 
 - **Crisp shadows:** edges are clean and even everywhere. The blur that grew
   with distance from the caster is gone, and with it the torn edges and the
