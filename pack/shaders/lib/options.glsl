@@ -16,8 +16,8 @@
 
 // ---- Grading ---------------------------------------------------------------
 #define EXPOSURE 1.00            // [0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.40 1.50]
-#define CONTRAST 0.30            // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.80 1.00]  1.00 = full S-curve
-#define BLACK_LIFT 0.010         // [0.000 0.010 0.015 0.025 0.040 0.060]
+#define CONTRAST 0.20            // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.80 1.00]  1.00 = full S-curve
+#define BLACK_LIFT 0.025         // [0.000 0.010 0.015 0.025 0.040 0.060]
 #define SATURATION 1.00        // [0.00 0.25 0.50 0.60 0.70 0.80 0.90 1.00 1.10 1.20 1.30 1.50 1.75 2.00]
 #define VIBRANCE 0.00          // [0.00 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90 1.00]
 #define CHROMA_LIMIT 1.00        // [0.00 0.25 0.50 0.70 0.80 0.90 1.00]
@@ -38,7 +38,7 @@
 
 // ---- Lighting (forward, in the geometry programs) ---------------------------
 #define SUN_INTENSITY 1.75     // [1.00 1.25 1.50 1.75 2.00 2.25 2.50 3.00]  noon strength; low sun is scaled down automatically
-#define AMBIENT_INTENSITY 1.00 // [0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00]
+#define AMBIENT_INTENSITY 1.25 // [0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00]
 #define MOON_BRIGHTNESS 0.50    // [0.00 0.50 0.75 1.00 1.50 2.00 3.00]
 
 // ---- Shadows (only used when ENABLE_SHADOWS is on) -------------------------
@@ -46,8 +46,9 @@
 // fake shadow takes over (cross-faded). Texel size = 2 * distance / SHADOW_MAP_RES.
 // Detail is kept near the player, whatever the distance: the map is warped
 // (SHADOW_WARP), and while the sun is high, small casters (grass, plants, thin
-// blocks) stop casting past SHADOW_NEAR * 2. At low sun their shadows are long
-// and they keep casting.
+// blocks) stop casting past SHADOW_SMALL_DIST: half the shadow distance, at least
+// SHADOW_NEAR * 2 (32 blocks at the default 4 chunks). At low sun their shadows
+// are long and they keep casting.
 #define SHADOW_NEAR 16.0
 #define SHADOW_CHUNKS 4          // [1 2 3 4 6 8 12 16 20 24 32]  chunks, like Minecraft's render distance (1 chunk = 16 blocks)
 // The same distance in blocks, as a plain literal: Iris reads shadowDistance
@@ -82,6 +83,7 @@
 #else
 #define SHADOW_DISTANCE 64
 #endif
+#define SHADOW_SMALL_DIST max(2.0 * SHADOW_NEAR, 0.5 * float(SHADOW_DISTANCE))
 #ifndef SHADOW_DEPTH
 #define SHADOW_DEPTH 576.0
 #define SHADOW_DEPTH_NEG -576.0

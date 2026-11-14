@@ -78,10 +78,11 @@ void main() {
     // distance made whole long shadows pop in and out while walking across the
     // threshold. The moon is opposite the sun, so its height is -sunH.
     float sunH = sin(sunAngle * 6.28318530718);
-    if (blockDist > 2.0 * SHADOW_NEAR) {
-        if ((id == 10003 || id == 10005 || id == 10006) && abs(sunH) > 0.5) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
-        if (id == 10001) solidCutout = 1;
-    }
+    // The range follows Shadow Distance (SHADOW_SMALL_DIST): Auto resolution grows
+    // the map with it, so a texel stays about the same size in blocks.
+    if (blockDist > SHADOW_SMALL_DIST && (id == 10003 || id == 10005 || id == 10006) && abs(sunH) > 0.5)
+        gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+    if (blockDist > 2.0 * SHADOW_NEAR && id == 10001) solidCutout = 1;
 #else
     gl_Position = vec4(2.0, 2.0, 2.0, 1.0);   // clipped: nothing is drawn if the pass runs anyway
 #endif
